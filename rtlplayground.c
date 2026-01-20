@@ -1974,15 +1974,44 @@ void bootloader(void)
 				write_char(sbuf[l]);
 				cmd_buffer[cursor++] = sbuf[l];
 				cmd_line_len++;
-			} else if (sbuf[l] < 127) {
+			} else if (sbuf[l] == '\033') { // ESC-Sequence
+				// Wait until we have at least 3 characters including the ESC character in the serial buffer
+				if ((sbuf_ptr + SBUF_SIZE - l) & (SBUF_SIZE - 1) < 3)
+					break;
+				if (sbuf[(l + 1) & (SBUF_SIZE - 1)] == '[') {
+					if (sbuf[(l + 2) & (SBUF_SIZE - 1)] == 'D') { // <CURSOR-LEFT>
+						if (cursor) {
+							write_char('\033'); write_char('['); write_char('D');
+							cursor--;
+						}
+						l += 3;
+						l &= (SBUF_SIZE - 1);
+						continue;
+					} else if (sbuf[(l + 2) & (SBUF_SIZE - 1)] == 'C') { // <CURSOR-RIGHT>
+						if (cursor < cmd_line_len) {
+							write_char('\033'); write_char('['); write_char('C');
+							cursor++;
+						}
+						l += 3;
+						l &= (SBUF_SIZE - 1);
+						continue;
+					}
+				}
+			} else if (sbuf[l] < 127) { // Non-printable characters except Backspace / ESC
 				print_byte(sbuf[l]);
 			} else {  // Backspace
 				if (cursor > 0) {
-					write_char(27); write_char('['); write_char('D'); write_char(' '); write_char(27); write_char('['); write_char('D');
-					cursor--;
-					for (uint8_t j = cursor; j <= cmd_line_len; j++) {
-						cmd_buffer[j] = cmd_buffer[j+1];
+					write_char('\033'); write_char('['); write_char('D');
+					for (uint8_t i = cursor; i < cmd_line_len; i++)
+						write_char(cmd_buffer[i]);
+					write_char(' '); // Overwrite end of line
+					// Move backwards n steps:
+					for (uint8_t i = cursor; i <= cmd_line_len; i++) {
+						write_char('\033'); write_char('['); write_char('D');
 					}
+					cursor--;
+					for (uint8_t j = cursor; j <= cmd_line_len; j++)
+						cmd_buffer[j] = cmd_buffer[j+1];
 					cmd_line_len--;
 				}
 			}
