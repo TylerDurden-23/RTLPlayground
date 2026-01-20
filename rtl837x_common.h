@@ -24,9 +24,8 @@
 #define LOOKUP_MISS_DROP_9  0x00015555
 #define LOOKUP_MISS_FLOOD   0x00000000
 
-// The serial buffer. Defines the command line size
-// Must be 2^x and <= 128
-#define SBUF_SIZE 128
+// Define the command buffer size, Must be 2^x and <= 128
+#define CMD_BUF_SIZE 128
 
 // Size of the TCP Output buffer
 #define TCP_OUTBUF_SIZE 2500

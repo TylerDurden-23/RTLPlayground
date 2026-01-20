@@ -86,9 +86,18 @@ extern __xdata struct dhcp_state dhcp_state;
 #define STP_TICK_DIVIDER 3
 
 
-// Buffer for serial input, SBUF_SIZE must be power of 2 < 256
+/* Buffer for serial input, SBUF_SIZE must be power of 2 < 256
+ * Writing to this buffer is under the sole control of the serial ISR
+ * Note that key-presses such as <cursor-left> can create multiple
+ * keys being sent via the serial line */
+#define SBUF_SIZE 16
 __xdata volatile uint8_t sbuf_ptr;
 __xdata uint8_t sbuf[SBUF_SIZE];
+
+/* Defines the properties of currently edited command line in cmd_buffer[CMD_BUF_SIZE]*/
+__xdata uint8_t cursor;
+__xdata uint8_t cmd_line_len;
+
 __xdata uint8_t sfr_data[4];
 
 extern __xdata uint8_t gpio_last_value[8];
@@ -1954,31 +1963,45 @@ void bootloader(void)
 	// sbuf_ptr is moved forward by serial interrupt, l is the position until we have already
 	// printed out the entered characters
 	__xdata uint8_t l = sbuf_ptr; // We have printed out entered characters until l
-	__xdata uint8_t line_start = sbuf_ptr; // This is where the current line starts
+	cursor = 0;
+	cmd_line_len = 0;
 	cmd_available = 0;
 	while (1) {
 		while (l != sbuf_ptr) {
+			if (sbuf[l] >= ' ' && sbuf[l] < 127) { // A printable character, copy to command line
+				if (cmd_line_len >= CMD_BUF_SIZE)
+					continue;
+				write_char(sbuf[l]);
+				cmd_buffer[cursor++] = sbuf[l];
+				cmd_line_len++;
+			} else if (sbuf[l] < 127) {
+				print_byte(sbuf[l]);
+			} else {  // Backspace
+				if (cursor > 0) {
+					write_char(27); write_char('['); write_char('D'); write_char(' '); write_char(27); write_char('['); write_char('D');
+					cursor--;
+					for (uint8_t j = cursor; j <= cmd_line_len; j++) {
+						cmd_buffer[j] = cmd_buffer[j+1];
+					}
+					cmd_line_len--;
+				}
+			}
 			// If the command buffer is currently in use, we cannot copy to it
 			if (cmd_available)
 				break;
-			write_char(sbuf[l]);
-			// Check whether there is a full line:
+			// Check whether return was pressed:
 			if (sbuf[l] == '\n' || sbuf[l] == '\r') {
 				write_char('\n');
-				register uint8_t i = 0;
-				while (line_start != l) {
-					cmd_buffer[i++] = sbuf[line_start++];
-					line_start &= (SBUF_SIZE - 1);
-				}
-				line_start++;
-				line_start &= (SBUF_SIZE - 1);
-				cmd_buffer[i] = '\0';
+				write_char('>');
+				cmd_buffer[cmd_line_len] = '\0';
 				// If there is a command we print the prompt after execution
 				// otherwise immediately because there is nothing to execute
-				if (i)
+				if (cmd_line_len)
 					cmd_available = 1;
 				else
 					print_string("\n> ");
+				cursor = 0;
+				cmd_line_len = 0;
 			}
 			l++;
 			l &= (SBUF_SIZE - 1);
