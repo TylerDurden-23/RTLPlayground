@@ -3,11 +3,17 @@
 
 #define RTL837X_REG_CHIP_INFO		0x000c
 #define RTL837X_REG_RESET		0x0024
+#define RTL837X_REG_CPU_INFO		0x4
 #define RESET_SOC_BIT			0
 #define RESET_NIC_BIT			2
 
 #define RTL837X_REG_HW_CONF		0x6040
 // Bits 4 & 5: CLOCK DIVIDER from 125MHz for Timer
+
+#define SYS_LED_OFF	   0
+#define SYS_LED_FAST   1
+#define SYS_LED_SLOW   2
+#define SYS_LED_ON     3
 
 #define RTL837X_REG_LED_MODE		0x6520
 // Defines the LED Mode for steering the Port LEDS and the System LED
@@ -163,7 +169,7 @@
 #define RTL837X_L2_LRN_PORT_CONSTRAINT	0x5384
 #define RTL837X_L2_LRN_PORT_CONSTRT_ACT	0x4f80
 #define	RTL8373_REG_MAC_L2_PORT_MAX_LEN	0x1250
-
+#define	RTL837X_REG_CFG_PHY_TX_POLARITY_SWAP 0xa94
 /*
  * VLAN configuration
  */
