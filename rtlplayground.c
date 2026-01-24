@@ -1611,9 +1611,10 @@ void rtl8373_init(void)
 	pval = SFR_DATA_U16;
 
 	// r0a90:000000f3 R0a90-000000fc
-	reg_read_m(0xa90);
-	sfr_mask_data(0, 0x0f,0x0c);
-	reg_write_m(0xa90);
+ 	reg_read_m(0xa94);
+        sfr_data[2] = 0x59;
+        sfr_data[3] = 0x6a;
+	reg_write_m(0xa94);
 
 	rtl8224_phy_enable();
 
@@ -1671,10 +1672,14 @@ void rtl8372_init(void)
 	#else
 	led_config();
 	// Additional initialization for n-devices
+	//if (is_n_device()) {
+	//	n_device_init();
+	//}
+	sds_init();
 	if (is_n_device()) {
 		n_device_init();
 	}
-	sds_init();
+
 	phy_config(8);	// PHY configuration: External 8221B?
 	phy_config(3);	// PHY configuration: all internal PHYs?
 	// Set the MAC SerDes Modes Bits 0-4: SDS 0 = 0x2 (0x2), Bits 5-9: SDS 1: 1f (off)

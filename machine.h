@@ -11,10 +11,10 @@
 // #define MACHINE_KP_9000_9XH_X_EU
 // #define MACHINE_SWGT024_V2_0
 // #define MACHINE_HORACO_ZX_SG4T2
-// #define MACHINE_HI_K0402WS
+#define MACHINE_HI_K0402WS
+//#define MACHINE_SWGT024AS_A_V2_0_1
 
 // #define DEFAULT_8C_1SFP
-
 // #define DEFAULT_5C_1SFP
 
 struct sfp_port

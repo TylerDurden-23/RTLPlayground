@@ -98,6 +98,31 @@ __code const struct machine machine = {
 	.reset_pin = 46,
 
 	};
+
+#elif defined MACHINE_SWGT024AS_A_V2_0_1
+__code const struct machine machine = {
+       .machine_name = "SWGT024AS-A V2.0.1",
+       .isRTL8373 = 0,
+       .min_port = 3,
+       .max_port = 8,
+       .n_sfp = 2,
+	   //					1  2  3	 4  5  6  7  8  9
+       .log_to_phys_port = {0, 0, 0, 6, 1, 2, 3, 4, 5},
+       .phys_to_log_port = {4, 5, 6, 7, 3, 8, 0, 0, 0},
+	                        1  2  3  4  5  6
+       .is_sfp= {0, 0, 0, 2, 0, 0, 0, 0, 1},
+       // Left SFP port (J2)
+       .sfp_port[0].pin_detect = 37,
+       .sfp_port[0].pin_los = 10, // 9 behaves inverted
+       .sfp_port[0].sds = 1,
+       .sfp_port[0].i2c = 1,
+       // Right SFP port (J3)
+       .sfp_port[1].pin_detect = 38,
+       .sfp_port[1].pin_los = 25, // 24 behaves the same
+       .sfp_port[1].sds = 0,
+       .sfp_port[1].i2c = 0,
+};
+
 #elif defined DEFAULT_8C_1SFP
 __code const struct machine machine = {
 	.machine_name = "8+1 SFP Port Switch",
@@ -113,5 +138,7 @@ __code const struct machine machine = {
 	.sfp_port[0].sds = 1,
 	.sfp_port[0].i2c = 0,
 };
+
+
 
 #endif

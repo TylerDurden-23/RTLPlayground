@@ -1,5 +1,8 @@
+#define DEBUG
+
 #ifndef __DEBUG_H__
 #define __DEBUG_H__
+
 
 #ifdef DEBUG
 #define dbg_string(s) print_string(s)
