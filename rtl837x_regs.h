@@ -1,7 +1,8 @@
 #ifndef _RTL837X_REGS_H_
 #define _RTL837X_REGS_H_
 
-#define RTL837X_REG_CHIP_INFO		0x000c
+#define RTL837X_REG_CHIP_ID		0x0004
+#define RTL837X_REG_CHIP_INFO	0x000c
 #define RTL837X_REG_RESET		0x0024
 #define RESET_SOC_BIT			0
 #define RESET_NIC_BIT			2
@@ -19,7 +20,15 @@
 // BIT 17 set: LED solid on
 // Bytes 0/1 hold the LED mode, e.g. serial, RTL8231?
 // Blink rate is defined by setAsicRegBits(0x6520,0xe00000,rate);
+#define RTL837X_REG_LED_GLB_MUX_1	0x65E0
+#define RTL837X_REG_LED_GLB_MUX_2	0x65E4
+#define RTL837X_REG_LED_GLB_MUX_3	0x65E8
+#define RTL837X_REG_LED_GLB_MUX_4	0x65EC
+#define RTL837X_REG_LED_GLB_MUX_5	0x65F0
+#define RTL837X_REG_LED_GLB_MUX_6	0x65F4
+#define RTL837X_REG_LED_GLB_ACTIVE	0x65D8
 #define RTL837X_REG_LED_GLB_IO_EN	0x65DC
+#define RTL837X_REG_LED_PORT_SET_SEL_CTRL	0x654C
 #define RTL837X_REG_LED3_0_SET1		0x6528
 #define RTL837X_REG_LED3_2_SET0		0x6544
 #define RTL837X_REG_LED1_0_SET0		0x6548
@@ -35,7 +44,20 @@
 #define RTL837X_REG_SEC_COUNTER2 0x06f8
 // Used for counting seconds
 
-#define RTL837X_REG_SDS_MODES 0x7b20
+
+/*
+ * SDS
+ */
+#define RTL837X_SDS_INDACS_CMD			0x3F8
+#define RTL837X_SDS_INDACS_WRITE_DATA	0x400
+#define RTL837X_REG_SDS_MODES			0x7b20
+
+/*
+ * PHY
+ */
+ #define RTL837X_CFG_PHY_TX_POLARITY_SWAP	0xA94
+ #define RTL837X_CFG_PHY_MDI_REVERSE		0xA90
+
 /*
  * 5 Bits each give the state of the 2 SerDes of the RTL8372
  * Values are:
@@ -63,6 +85,7 @@
  */
 
 #define RTL837X_PIN_MUX_0	0x7f8c
+#define RTL837X_IO_MUX_SEL_0	0x7f8c
 #define RTL837X_PIN_MUX_1	0x7f90
 #define RTL837X_PIN_MUX_2	0x7f94
 

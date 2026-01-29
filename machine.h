@@ -6,11 +6,12 @@
 /*
  * Select your machine type below
  */
-#define MACHINE_KP_9000_6XHML_X2
+// #define MACHINE_KP_9000_6XHML_X2
 // #define MACHINE_KP_9000_6XH_X
 // #define MACHINE_KP_9000_9XH_X_EU
 // #define MACHINE_SWGT024_V2_0
 // #define MACHINE_HORACO_ZX_SG4T2
+// #define MACHINE_HI_K0402WS
 
 // #define DEFAULT_8C_1SFP
 
@@ -36,6 +37,12 @@ typedef struct machine {
 	// sfp_port[0] is the first SFP-port from the left on the device, sfp_port[1] the next if present 
 	struct sfp_port sfp_port[2];
 	int8_t reset_pin;
+};
+
+typedef struct machine_runtime
+{
+	uint8_t isRTL8373 : 1;
+	uint8_t isN : 1;
 };
 
 #endif
