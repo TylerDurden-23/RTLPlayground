@@ -192,29 +192,23 @@ __code const struct machine machine = {
 
 	.reset_pin = GPIO_NA,
 	.high_leds = { .mux = LED_27 | LED_29, .enable = LED_28 | LED_29 },
-	.port_led_set = { 0, 0, 0, 0, 0, 1, 1, 2, 2},
+	.port_led_set = { 0, 0, 0, 1, 0, 0, 0, 0, 1},
 	/* Conditions for LED on: 
 	 * dual led orange: ledset_0 & ledset_2
 	 * dual led green: ledset_2 & !ledset_0
 	 * single right led green: ledset_0 & !ledset_1
 	*/
 	.led_sets = { 
-			{ LEDS_2G5 | LEDS_1G | LEDS_100M | LEDS_10M | LEDS_LINK | LEDS_ACT | LEDS_10G,
-			LEDS_2G5 | LEDS_LINK | LEDS_10G,
-			LEDS_1G | LEDS_LINK, 
+			{
+				LEDS_2G5 | LEDS_LINK | LEDS_10G | LEDS_ACT,
+				LEDS_1G | LEDS_100M | LEDS_10M | LEDS_LINK | LEDS_ACT | LEDS_10G,
+				LEDS_1G | LEDS_LINK, 
 			0 },
-			{ LEDS_2G5 | LEDS_1G | LEDS_100M | LEDS_10M | LEDS_LINK | LEDS_ACT | LEDS_10G,
-			LEDS_2G5 | LEDS_LINK | LEDS_10G,
-			LEDS_1G | LEDS_LINK, 
+			{  
+				LEDS_10G | LEDS_2G5 | LEDS_1G | LEDS_100M | LEDS_10M | LEDS_LINK | LEDS_ACT,
+				LEDS_2G5 | LEDS_LINK | LEDS_10G,
+				LEDS_1G | LEDS_LINK, 
 			0 },
-			{ LEDS_2G5 | LEDS_1G | LEDS_100M | LEDS_10M | LEDS_LINK | LEDS_ACT | LEDS_10G,
-			LEDS_2G5 | LEDS_LINK | LEDS_10G,
-			LEDS_1G | LEDS_LINK, 
-			0 },
-			{ LEDS_2G5 | LEDS_1G | LEDS_100M | LEDS_10M | LEDS_LINK | LEDS_ACT | LEDS_10G,
-			LEDS_2G5 | LEDS_LINK | LEDS_10G,
-			LEDS_1G | LEDS_LINK, 
-			0 }
 		    },
 	};
 
