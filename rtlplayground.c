@@ -1799,7 +1799,7 @@ void led_config_by_magic_numbers(void)
 	REG_SET(RTL837X_REG_LED_GLB_MUX_5, 0x1c79d65a);
 	REG_SET(RTL837X_REG_LED_GLB_MUX_6, 0x0002181d);
 	REG_SET(RTL837X_IO_MUX_SEL_0, 0x30db68bf);
-	
+
 	//REG_SET(RTL837X_REG_LED_GLB_ACTIVE, 0x3ffb6dff);
 	//REG_SET(RTL837X_REG_LED_MODE, 0x0021e430);
 	// REG_SET(RTL837X_REG_LED_RLDP_1, 0x0000001b);
@@ -1892,9 +1892,7 @@ void bootloader(void)
 	init_smi();
 	rtl8373_revision();
 
-	led_config_by_magic_numbers();
 	leds_setup();
-	//led_config_by_magic_numbers();
 	leds_dump();
 
 	if (machine_detected.isRTL8373)

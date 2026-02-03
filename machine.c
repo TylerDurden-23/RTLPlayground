@@ -180,13 +180,13 @@ __code const struct machine machine = {
 	
 	// Left SFP port
 	.sfp_port[0].pin_detect = GPIO38, // Checked !
-	.sfp_port[0].pin_los = GPIO27_LED27, // checked !
+	.sfp_port[0].pin_los = GPIO_NA, // checked !
 	.sfp_port[0].sds = 1, 
 	.sfp_port[0].i2c =  { .sda = GPIO39_I2C_SDA4, .scl = GPIO40_I2C_SCL3_MDC1 }, //checked
 
 	// Right SFP port
 	.sfp_port[1].pin_detect = GPIO37, // Checked !
-	.sfp_port[1].pin_los = GPIO8_LED8, // checked !
+	.sfp_port[1].pin_los = GPIO_NA, // checked !
 	.sfp_port[1].sds = 0, 
 	.sfp_port[1].i2c = { .sda = GPIO41_I2C_SDA3_MDIO1, .scl = GPIO40_I2C_SCL3_MDC1 }, // checked correct
 
@@ -210,6 +210,10 @@ __code const struct machine machine = {
 				LEDS_1G | LEDS_LINK, 
 			0 },
 		    },
+	.led_mux_custom = 1,
+	.led_mux = {
+				0x00,0x01,0x04,0x05,0x08,0x09,0x0c,0x3f,0x0d,0x10,0x11,0x0e,0x14,0x11,0x12,0x15,0x15,0x16,0x18,0x19,0x1a,0x19,0x1d,0x1e,0x1c,0x1d,0x20,0x21
+},
 	};
 
 #elif defined DEFAULT_8C_1SFP
