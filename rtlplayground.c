@@ -76,7 +76,7 @@ void crc16(__xdata uint8_t *v) __naked;
 __xdata uint8_t idle_ready;
 
 __code uint8_t ownIP[] = { 192, 168, 2, 2 };
-__code struct uip_eth_addr uip_ethaddr = {{ 0x1c, 0x2a, 0xa3, 0x23, 0x00, 0x02 }};
+__xdata struct uip_eth_addr uip_ethaddr;  //= {{ 0x1a, 0x2a, 0xa3, 0x23, 0x00, 0x02 }};
 __code uint8_t gatewayIP[] = { 192, 168, 2, 22};
 __code uint8_t netmask[] = { 255, 255, 255, 0};
 
@@ -1379,7 +1379,17 @@ void nic_setup(void)
 	tx_seq = 0;
 }
 
-
+void ethaddr_init(void)
+{
+	// Set MAC address of CPU port
+	reg_read_m(RTL8373_CHIP_UUID_REG_ADDR);
+	uip_ethaddr.addr[0] = 0x13; // Set Locally Administered bit, to avoid conflicts with real MAC addresses, and set bit 1 to indicate locally administered unicast address
+	uip_ethaddr.addr[1] = 0xA2; // Random value
+	uip_ethaddr.addr[2] = sfr_data[1] ^ sfr_data[0];
+	uip_ethaddr.addr[3] = sfr_data[2] ^ sfr_data[0];
+	uip_ethaddr.addr[4] = sfr_data[3] ^ sfr_data[0]; 
+	uip_ethaddr.addr[5] = sfr_data[3] ^ sfr_data[0];
+}
 /*
  * Configure the PHY-Side of the SDS-SDS link between SoC and PHY
  */
@@ -1947,6 +1957,9 @@ void bootloader(void)
 		reg_read(RTL837X_REG_RESET);
 	} while (SFR_DATA_0 & (1 << RESET_NIC_BIT));
 	print_string("NIC reset\n");
+
+	//Setup management interface MAC
+	ethaddr_init();
 
 	uip_ipaddr(&uip_hostaddr, ownIP[0], ownIP[1], ownIP[2], ownIP[3]);
 	uip_ipaddr(&uip_draddr, gatewayIP[0], gatewayIP[1], gatewayIP[2], gatewayIP[3]);
